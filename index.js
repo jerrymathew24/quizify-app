@@ -1,4 +1,13 @@
-let readline = require('readline-sync')
+let readlineSync = require('readline-sync')
+let kuler = require('kuler')
+
+let score = 0
+let username = readlineSync.question('Whats your Name?')
+console.log(kuler(`\nWelcome ${username} to Quizify`, '#dc2626'))
+
+
+console.log(kuler('\nPlease select any option from the options a/b/c/d\n' ,''));
+
 
 const database = {
     data:[
@@ -34,12 +43,32 @@ creates which type of copy?`,
     ]
 }
 
+let leaderBoard = {
+    data:[
+        {
+            name: 'Rahul',
+            score: 3
+        },
+        {
+            name: 'Rohit',
+            score: 2
+        },
+        {
+            name: 'Mohan',
+            score: 3
+        }
+    ]
+}
+
 
 function startQuiz(userAnswer, correctAnswer){
     if(userAnswer===correctAnswer){
-        console.log('Correct Answer')
+        console.log(kuler('Correct Answer', '#059669'))
+        score++
     }else{
-        console.log('Incorrect Answer')
+        console.log(kuler('Incorrect Answer', '#b91c1c'))
+        console.log(kuler(`Correct Answer is ${correctAnswer}\n`, '#1d4ed8'));
+        
     }
 }
 
@@ -49,9 +78,22 @@ function showQuestionAndOptions(database){
         for(let key in database.data[i].options){
             console.log(`${key}: ${database.data[i].options[key]}\n`)
         }
-        let userAnswer  = readline.question('Enter your answer - (a/b/c/d) - ').toLowerCase()
+        let userAnswer  = readlineSync.question('Enter your answer - (a/b/c/d) - ').toLowerCase()
         
         startQuiz(userAnswer, database.data[i].correctAnswer)
     }
 }
+
+function showHighScorer(leaderBoard){
+    leaderBoard.data.push({name: username, score: score})
+    let sortedScoreList = leaderBoard.data.sort((a,b)=>b.score-a.score)
+    console.log(kuler(`\nCheck your position in LeaderBoard 🎉🎉\n`, '#fde047'));
+    
+    for(let leader of sortedScoreList){
+        console.log(kuler(`${leader.name} : Score- ${leader.score}`, '#9333ea'));
+        
+    }
+}
 showQuestionAndOptions(database)
+console.log(kuler(`Your score is ${score}`,'#5eead4'));
+showHighScorer(leaderBoard)
